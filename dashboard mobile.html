@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rider App - ORA UMUM</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Phone Frame */
+        .phone-frame {
+            width: 360px;
+            height: 700px;
+            background-color: white;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* App Header */
+        .app-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2;
+        }
+
+        /* Status Bar (Dynamic) */
+        .status-bar {
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        .status-safe {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .status-danger {
+            background-color: #e74c3c;
+            color: white;
+            animation: pulse-red 0.8s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { background-color: #e74c3c; }
+            50% { background-color: #c0392b; }
+            100% { background-color: #e74c3c; }
+        }
+
+        /* Speedometer Area */
+        .speed-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .speed-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 10px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .speed-value { font-size: 4rem; font-weight: bold; color: #333; }
+        .speed-unit { font-size: 1rem; color: #888; }
+
+        /* Navigation Instruction */
+        .nav-box {
+            background: #f8f9fa;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .nav-icon { font-size: 2rem; margin-right: 15px; }
+
+        /* Warning Overlay (Hidden by default) */
+        .warning-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(231, 76, 60, 0.95);
+            color: white;
+            display: none; /* Hidden initially */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
+        }
+        .warning-icon { font-size: 5rem; margin-bottom: 20px; }
+        .warning-text { font-size: 2rem; font-weight: bold; margin-bottom: 10px; }
+        .warning-sub { font-size: 1rem; }
+
+        /* Simulator Controls (For Demo) */
+        .sim-controls {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+        }
+        .sim-btn {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-frame">
+        <div class="app-header">
+            <span>📍 Jl. Kaliurang Km 5</span>
+            <span>🔋 85%</span>
+        </div>
+
+        <div id="statusBar" class="status-bar status-safe">
+            ✅ Jalur Aman (Green Lane)
+        </div>
+
+        <div class="speed-area">
+            <div class="speed-circle" id="speedCircle">
+                <span class="speed-value">18</span>
+                <span class="speed-unit">km/h</span>
+            </div>
+            
+            <div class="nav-box">
+                <div class="nav-icon">⬆️</div>
+                <div>
+                    <strong>Lurus 500m</strong><br>
+                    <small>Tetap di lajur kiri (marka hijau)</small>
+                </div>
+            </div>
+        </div>
+
+        <div id="warningScreen" class="warning-overlay">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-text">KELUAR JALUR!</div>
+            <div class="warning-sub">Anda memasuki area Pejalan Kaki.<br>Kembali ke jalur hijau sekarang.</div>
+            <br>
+            <small>Mematikan mesin dalam 5 detik...</small>
+        </div>
+    </div>
+
+    <div class="sim-controls">
+        <button class="sim-btn" style="background: green;" onclick="setSafe()">Simulasi: Masuk Jalur</button>
+        <button class="sim-btn" style="background: red;" onclick="setDanger()">Simulasi: Keluar Jalur</button>
+    </div>
+
+    <script>
+        // Simple script to simulate sensor input
+        function setSafe() {
+            document.getElementById('warningScreen').style.display = 'none';
+            const status = document.getElementById('statusBar');
+            status.className = 'status-bar status-safe';
+            status.innerHTML = '✅ Jalur Aman (Green Lane)';
+            document.getElementById('speedCircle').style.borderColor = '#2ecc71';
+        }
+
+        function setDanger() {
+            document.getElementById('warningScreen').style.display = 'flex';
+            const status = document.getElementById('statusBar');
+            status.className = 'status-bar status-danger';
+            status.innerHTML = '⚠️ PERINGATAN PELANGGARAN';
+            document.getElementById('speedCircle').style.borderColor = '#e74c3c';
+        }
+    </script>
+</body>
+</html>
